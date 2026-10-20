@@ -96,6 +96,16 @@ Outside this package, moving `apps/backend` onto Workers means:
 - `apps/backend/src/engine/index.ts` returns a `CloudflareWorkflowEngine`; the routes are unchanged.
 - The `/executions/:id/stream` route delegates to `streamExecutionEvents` after its own auth and tenant checks.
 
-## Limits to confirm before production
+## Platform limits (checked October 2026)
 
-Check the current Workflows limits page for: the per-instance step count (each node costs about three steps), the maximum `waitForEvent` timeout against your `decisionTimeout`, params size (the whole definition travels as `params`), and what `sendEvent` returns for an instance not currently waiting on that type.
+- `waitForEvent`: 1 second to 365 days, default 24 hours. `decisionTimeout` defaults to 30 days.
+- Steps per instance: 1,024 (Workers Free), 10,000 (Paid, configurable to 25,000). Budget about four steps per node.
+- Step return value and event payload: 1 MiB each. An executor producing more should store it (R2, a table) and return a key.
+- CPU time per step: 10 ms (Free), 30 s (Paid). LLM and HTTP calls are wall-clock, which is unlimited.
+- `sendEvent` for a type nothing is waiting on is **buffered** until a matching `waitForEvent` runs. Good for the race where a verdict lands just before the node parks; it also means a verdict sent after a node resolved would be consumed if that node parks again, so wire `waitState` in production. (Upstream tracks the same for Temporal as `decision-attempt-in-engine`.)
+
+## Before `wrangler dev`
+
+1. Apply the reference backend's migrations (`apps/backend`, Drizzle) to the Postgres that Hyperdrive fronts.
+2. Add `localConnectionString` to the `hyperdrive` binding for local development.
+3. `examples/worker` is outside the root `pnpm-workspace.yaml` globs; add `packages/*/examples/*` or run it standalone against a built tarball.
