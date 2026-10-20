@@ -1,0 +1,70 @@
+{
+  "name": "@workflowbuilder/cloudflare",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Run Workflow Builder diagrams as durable Cloudflare Workflows: a WorkflowEntrypoint runner that maps every node onto step.do and every human decision onto step.waitForEvent, plus the client-side engine the backend submits runs through.",
+  "keywords": [
+    "cloudflare",
+    "cloudflare-workflows",
+    "durable-execution",
+    "workflow",
+    "workflow-engine",
+    "orchestration",
+    "typescript",
+    "workflow-builder"
+  ],
+  "author": "Synergy Codes",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/synergycodes/workflowbuilder",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/synergycodes/workflowbuilder.git",
+    "directory": "packages/cloudflare"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.js"
+    },
+    "./workflow": {
+      "types": "./dist/workflow/index.d.ts",
+      "import": "./dist/workflow/index.js"
+    },
+    "./workers": {
+      "types": "./dist/workers/index.d.ts",
+      "import": "./dist/workers/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251001.0",
+    "@workflow-builder/execution-core": "workspace:*",
+    "@workflow-builder/types": "workspace:*",
+    "tsup": "^8.3.5",
+    "typescript": "~5.6.3",
+    "vitest": "^3.0.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
+}

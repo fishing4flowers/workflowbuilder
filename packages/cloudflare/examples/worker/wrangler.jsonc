@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "workflow-builder",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workflows": [
+    { "name": "workflow-builder-execution", "binding": "WORKFLOW", "class_name": "ExecutionWorkflow" }
+  ],
+  "durable_objects": {
+    "bindings": [{ "name": "EXECUTION_EVENTS", "class_name": "ExecutionEventsObject" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["ExecutionEventsObject"] }],
+  "hyperdrive": [{ "binding": "DB", "id": "<hyperdrive-config-id>" }]
+}
